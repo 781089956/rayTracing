@@ -7,4 +7,5 @@ import top.yzzblog.rayTracing.Wrapper;
 
 public interface Material {
     boolean scatter(Ray ray, HitRecord record, Wrapper wrapper);
+    Vec3 emitted();
 }

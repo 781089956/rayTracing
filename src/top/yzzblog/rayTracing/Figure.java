@@ -1,10 +1,13 @@
 package top.yzzblog.rayTracing;
 
+import top.yzzblog.rayTracing.material.DiffuseLight;
 import top.yzzblog.rayTracing.material.Lambertian;
 import top.yzzblog.rayTracing.material.Metal;
 import top.yzzblog.rayTracing.material.Dielectric;
 import top.yzzblog.rayTracing.shape.Box;
+import top.yzzblog.rayTracing.shape.FlipNormal;
 import top.yzzblog.rayTracing.shape.Sphere;
+import top.yzzblog.rayTracing.shape.XZRect;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -22,10 +25,11 @@ public class Figure {
     private static HittableList world = new HittableList();
 
     static {
+//        world.add(new FlipNormal(new XZRect(0.5f, 1.5f, -1.5f, 0.5f, 1f,
+//                new DiffuseLight(null, new Vec3(1, 1, 1)))));
+        world.add(new Sphere(new Vec3(0, 1.2f, -0.7f), 0.3f, new DiffuseLight(null, new Vec3(1, 1, 1))));
         world.add(new Sphere(new Vec3(-0.8f, 0.0f, -1.0f), 0.5f,
                 new Metal(new Vec3(0.8f, 0.6f, 0.2f), 0.1f)));
-//        world.add(new Sphere(new Vec3(0.6f, 0f, -1.0f), 0.5f,
-//                new Metal(new Vec3(0.8f, 0.1f, 0.3f), 0.7f)));
         world.add(new Sphere(new Vec3(1f, 0f, -1.0f), 0.5f,
                 new Dielectric(1.5f)));
         world.add(new Box(new Vec3(-0.2f, -0.5f, -1.2f), new Vec3(0.4f, 0.1f, -0.6f),
@@ -40,7 +44,7 @@ public class Figure {
 
         this.height = height;
         float aspect = (float) width / (float) height;  //宽高比
-        camera = new Camera(new Vec3(-1.2f,1.2f,1.3f), new Vec3(0,0,-1),new Vec3(0,1,0), 40, aspect);
+        camera = new Camera(new Vec3(-1.2f,0f,1.3f), new Vec3(0,0,-1),new Vec3(0,1,0), 40, aspect);
     }
 
     public void render() {
@@ -86,16 +90,20 @@ public class Figure {
 
         HitRecord record;
         Wrapper wrapper = new Wrapper();
-        if (null != (record = world.hit(ray, 0, Float.MAX_VALUE)) &&
-                record.getMaterial().scatter(ray, record, wrapper)) {
-            return color(wrapper.scattered, world, depth + 1).multiply(wrapper.attenuation);
+        if (null != (record = world.hit(ray, 0, Float.MAX_VALUE))) {
+            Vec3 emitted = record.getMaterial().emitted();
+            if (record.getMaterial().scatter(ray, record, wrapper)) {
+                return emitted.add(color(wrapper.scattered, world, depth + 1).multiply(wrapper.attenuation));
+            }else{
+                return emitted;
+            }
         }
         // 天空
-        Vec3 dir = ray.direction().normalize();
-        float y = 0.5f * (dir.y() + 1.0f);
-
-        return new Vec3(1.0f, 1.0f, 1.0f).scale(1.0f - y).add(new Vec3(0.5f, 0.7f, 1.0f).scale(y));
-//        return new Vec3(1f, 1f, 1f);
+//        Vec3 dir = ray.direction().normalize();
+//        float y = 0.5f * (dir.y() + 1.0f);
+//
+//        return new Vec3(1.0f, 1.0f, 1.0f).scale(1.0f - y).add(new Vec3(0.5f, 0.7f, 1.0f).scale(y));
+        return new Vec3(0f, 0f, 0f);
     }
 
 

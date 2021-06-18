@@ -4,7 +4,7 @@ import top.yzzblog.rayTracing.HitRecord;
 import top.yzzblog.rayTracing.Ray;
 import top.yzzblog.rayTracing.Vec3;
 
-public abstract class AbstractMaterial implements Material{
+public abstract class AbstractMaterial implements Material {
     private Vec3 albedo;    // 反射率
 //    private float fuzz; // 模糊
 
@@ -14,6 +14,10 @@ public abstract class AbstractMaterial implements Material{
 
     public Vec3 getAlbedo() {
         return albedo;
+    }
+
+    public Vec3 emitted() {
+        return new Vec3(0, 0, 0);
     }
 
 }
