@@ -1,7 +1,6 @@
 package top.yzzblog.rayTracing.shape;
 
 import top.yzzblog.rayTracing.HitRecord;
-import top.yzzblog.rayTracing.Hittable;
 import top.yzzblog.rayTracing.Ray;
 
 public class FlipNormal implements Hittable{

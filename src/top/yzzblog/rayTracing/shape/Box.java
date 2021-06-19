@@ -3,9 +3,6 @@ package top.yzzblog.rayTracing.shape;
 import top.yzzblog.rayTracing.*;
 import top.yzzblog.rayTracing.material.Material;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Box implements Hittable {
     private Vec3 pmin, pmax;
     HittableList list;

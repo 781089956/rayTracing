@@ -1,9 +1,11 @@
 package top.yzzblog.rayTracing;
 
+import top.yzzblog.rayTracing.shape.Hittable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class HittableList implements Hittable{
+public class HittableList implements Hittable {
     private List<Hittable> list = new ArrayList<>();
 
     public HittableList() {

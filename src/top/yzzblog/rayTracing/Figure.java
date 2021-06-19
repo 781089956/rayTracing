@@ -27,7 +27,7 @@ public class Figure {
     static {
 //        world.add(new FlipNormal(new XZRect(0.5f, 1.5f, -1.5f, 0.5f, 1f,
 //                new DiffuseLight(null, new Vec3(1, 1, 1)))));
-        world.add(new Sphere(new Vec3(0, 1.2f, -0.7f), 0.3f, new DiffuseLight(null, new Vec3(1, 1, 1))));
+//        world.add(new Sphere(new Vec3(0, 1.2f, -0.7f), 0.3f, new DiffuseLight(null, new Vec3(1, 1, 1))));
         world.add(new Sphere(new Vec3(-0.8f, 0.0f, -1.0f), 0.5f,
                 new Metal(new Vec3(0.8f, 0.6f, 0.2f), 0.1f)));
         world.add(new Sphere(new Vec3(1f, 0f, -1.0f), 0.5f,
@@ -44,7 +44,7 @@ public class Figure {
 
         this.height = height;
         float aspect = (float) width / (float) height;  //宽高比
-        camera = new Camera(new Vec3(-1.2f,0f,1.3f), new Vec3(0,0,-1),new Vec3(0,1,0), 40, aspect);
+        camera = new Camera(new Vec3(-1.2f, 0f, 1.3f), new Vec3(0, 0, -1), new Vec3(0, 1, 0), 40, aspect);
     }
 
     public void render() {
@@ -86,24 +86,25 @@ public class Figure {
     }
 
     private Vec3 color(Ray ray, HittableList world, int depth) {
-        if (depth > 50) return new Vec3(0, 0, 0);
+        if (depth < 50) {
 
-        HitRecord record;
-        Wrapper wrapper = new Wrapper();
-        if (null != (record = world.hit(ray, 0, Float.MAX_VALUE))) {
-            Vec3 emitted = record.getMaterial().emitted();
-            if (record.getMaterial().scatter(ray, record, wrapper)) {
-                return emitted.add(color(wrapper.scattered, world, depth + 1).multiply(wrapper.attenuation));
-            }else{
-                return emitted;
+            HitRecord record;
+            Wrapper wrapper = new Wrapper();
+            if (null != (record = world.hit(ray, 0, Float.MAX_VALUE))) {
+                Vec3 emitted = record.getMaterial().emitted();
+                if (record.getMaterial().scatter(ray, record, wrapper)) {
+                    return emitted.add(color(wrapper.scattered, world, depth + 1).multiply(wrapper.attenuation));
+                } else {
+                    return emitted;
+                }
             }
         }
         // 天空
-//        Vec3 dir = ray.direction().normalize();
-//        float y = 0.5f * (dir.y() + 1.0f);
-//
-//        return new Vec3(1.0f, 1.0f, 1.0f).scale(1.0f - y).add(new Vec3(0.5f, 0.7f, 1.0f).scale(y));
-        return new Vec3(0f, 0f, 0f);
+        Vec3 dir = ray.direction().normalize();
+        float y = 0.5f * (dir.y() + 1.0f);
+
+        return new Vec3(1.0f, 1.0f, 1.0f).scale(1.0f - y).add(new Vec3(0.5f, 0.7f, 1.0f).scale(y));
+//        return new Vec3(0f, 0f, 0f);
     }
 
 
